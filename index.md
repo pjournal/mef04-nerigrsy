@@ -1,6 +1,6 @@
 ## Welcome to My Personal Progress Journal
 
-#Assignments
+# Assignments
 
 ### Assignment 1-R Markdown
 

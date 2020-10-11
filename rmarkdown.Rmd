@@ -1,0 +1,20 @@
+---
+title: "**Assignment 1**"
+author: "Neriman GÜRSOY"
+date: "11/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### **Short Story of My Life**
+
+My name is Neriman. In October 2018, I graduated from Yıldız Technical University Industrial Engineering Department as the high honor student. After that, I have started working at LC Waikiki as a Data Engineer.
+
+I love working with data and I would like to continue my career in this area. While working in this area, I want to increase my data literacy, understanding and defining data skills. Also, I want to improve myself about processing data to be entered into Machine learning algorithm correctly and combining correct data with correct algorithm. I hope that this course will offer different aspects to improve my skill in career.
+
+[Linkedin](https://www.linkedin.com/in/neriman-g%C3%BCrsoy-a1a089107/)
+
+

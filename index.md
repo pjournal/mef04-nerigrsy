@@ -3,7 +3,7 @@
 # Assignments
 
 ### Assignment 1-R Markdown
-
+Report: [html](rmarkdown.html)
 
 ### Jekyll Themes
 

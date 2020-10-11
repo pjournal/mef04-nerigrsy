@@ -1,7 +1,8 @@
 ## Welcome to My Personal Progress Journal
 
+#Assignments
 
-### Assignment1-RMarkdown
+### Assignment 1-R Markdown
 
 
 ### Jekyll Themes

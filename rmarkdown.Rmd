@@ -9,12 +9,48 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-### **Short Story of My Life**
+## **Short Story of My Life**
 
 My name is Neriman. In October 2018, I graduated from Yıldız Technical University Industrial Engineering Department as the high honor student. After that, I have started working at LC Waikiki as a Data Engineer.
 
 I love working with data and I would like to continue my career in this area. While working in this area, I want to increase my data literacy, understanding and defining data skills. Also, I want to improve myself about processing data to be entered into Machine learning algorithm correctly and combining correct data with correct algorithm. I hope that this course will offer different aspects to improve my skill in career.
 
 [Linkedin](https://www.linkedin.com/in/neriman-g%C3%BCrsoy-a1a089107/)
+
+
+## **useR! 2020 Videos **
+
+#### *Using R to Support COVID Response at the Health System*
+
+In this video, Corey Fritsch, who is from UW Health and Applied Data Science Team talks about his team and how they leveraged RStudio Server Pro for work with Covid-19. The team that Fritsch work on is called Applied Data Science (ADS). They directly access to the electronic health record and data warehouse to gather data. They develop predictive  models as well as work with researchers to translate and implement predictive models into operations. In early March, the team joined collaboration of other analysts and focused on developing analytics to help organizations with preparations for Covid-19. They tasked with making weekly updates to an incident command team. They had to provide a lot of answers so they started to use RStudio Server Pro as the main solution for everything they did from data collection through visualization. with R studio they created scripts and notebooks to automatically pull this in daily to be used in Incident Command dashboards. Also it allowed them to federate and analyze publicly available data with their local data.
+
+The team developed three predictive models. One of them is SEIR(Susceptible Exposed Infected Resistant) predictive model that took clinical features into account.They also leveraged R Markdown quite a bit.They were trying to be very effective and efficient on some of the modeling. The markdown was really helped them when they wanted to just export something as an html that could have been get to any person. By using this markdown, the team did a lot of analysis of current past active cases, bed capacity and usage and projections.Their models and analytics used a combination of publicly available UW-Health specific data. They authenticated and distributed all their R markdown and other reports in a secure fashion to different stakeholders.
+
+[Youtube Video Link](https://www.youtube.com/watch?v=h()0c5iB_VFcg)
+
+
+
+#### *Using R to Produce Clinical Reports in the Patient Record*
+
+In this video, Daniel Holmes talks about using R to produce clinical reports in the patient record that in specific to reference to a condition called primary aldosteronism. Primary aldosteronism is the most common curable form of hypertension that does not have a well-defined cause and so it is just treated with medications.
+The project's analytical and data workflow starts with generating data.These data generated off a mass spectrometer. They developed the patient sample is taken to liquid handling robot from Hamilton.It is subjected to an number of treatments for aldosterone.Then after the extraction the methyl butte tertial ether is dried off and the sample reconstituted methanol water and then they can measure aldosterone.To get patient identifiers what is actually just the barcode on the tube which is not a patient identifier. It is a sample identifier but to get it across they use R to just do some data munching.But they can not interpret those results by themselves they need to marry them with the clinical data which is not on the patient barcode identifier. So in order to marry it with the clinical data they have to get that clinical data out now at the time that was developed this workflow data innovations which is appearing down here was not available
+
+They used expect language to strip information directly through a text interface to the laboratory system.This is all run by bash and get data from the laboratory information system which is sun quest we marry that clinical data produce an excel file. Then a flat file is sent over to data innovations and then goes to sun quest into the electronic health record. They used interpretive algorithm that is applied by the R script from the mass spectrometer uniting with the clinical data.
+
+[Youtube Video Link](https://www.youtube.com/watch?v=dfZ54QbppjM)
+
+
+
+#### *Multi-stage Financial Modeling using Machine Learning in R*
+
+In the R Conference, which is accessed on YouTube, one of the project participants provides information about multi-stage financial modeling in R. R packages focuses on commodity price such as soybean, corn, cotton, Their prices are always affected by different and many factors such as economy, agriculture, weather, policies.
+These data can be obtained via different sources and the data sets might be dirty, this package can help you reading the data , clean the data and merge data with different granularities like daily, weekly, monthly, annual.This R package also has an auto-machine learning pipeline which helps to inhabit parameters and pick the best model out of.
+
+The video provides a simple implementation of the financial modeling package by using soybean prices. Also the video provides a sample sequential model generated by R package.This model is transformed into a dashboard, which is a kind of decision support system. It provides time series  analysis, further analysis and stock analysis. The dashboard can be used for data visualization , as well as exploring the data sets and getting some idea of feature selections and engineering.
+
+[Youtube Video Link](https://www.youtube.com/watch?v=-cgwDHzd0p4)
+
+
+
 
 

@@ -1,5 +1,5 @@
 ---
-title: "In-Class Exercise"
+title: "*In-Class Exercise*"
 author: "Neriman Gürsoy"
 date: "11-4-2020"
 output: html_document

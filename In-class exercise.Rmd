@@ -1,0 +1,45 @@
+---
+title: "In-Class Exercise"
+author: "Neriman Gürsoy"
+date: "11-4-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set
+library(dplyr)
+library(tidyverse)
+library(lubridate)
+library(readxl)
+```
+
+
+```{r}
+raw_df <- read_excel("/Users/NERIMAN.GURSOY/Desktop/R data/EVDS_istanbul_property_data.xlsx")
+
+glimpse((raw_df))
+```
+
+
+```{r}
+raw_df1 <- raw_df %>% filter()%>% select(Date, TotalSales, FirstHandSales, SecondHandSales) %>% arrange(Date)
+glimpse(raw_df1)
+
+```
+
+
+```{r}
+
+raw_df1$Date<- gsub(pattern="\\.","-", raw_df1$Date)
+raw_df1$Date<-as.POSIXct(raw_df1$Date,format="%y-%m")
+
+glimpse(raw_df1)
+
+
+```
+
+
+```{r}
+ggplot(plot_df, aes(x=lubridate::date(Date)) + geom_line(aes(y=FirstHandSales, color="FirstHandSales")) 
+
+```

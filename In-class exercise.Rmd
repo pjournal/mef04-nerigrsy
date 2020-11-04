@@ -15,31 +15,27 @@ library(readxl)
 
 
 ```{r}
-raw_df <- read_excel("/Users/NERIMAN.GURSOY/Desktop/R data/EVDS_istanbul_property_data.xlsx")
+raw_df <- read_excel("/Users/NERIMAN.GURSOY/Desktop/R data/EVDS_istanbul_property_data.xlsx", n_max=100)
 
 glimpse((raw_df))
 ```
 
 
 ```{r}
-raw_df1 <- raw_df %>% filter()%>% select(Date, TotalSales, FirstHandSales, SecondHandSales) %>% arrange(Date)
-glimpse(raw_df1)
+plot_df <- raw_df %>% filter(Date>=2016) %>%select(Date, TotalSales,HouseLevel)
 
 ```
 
+### House Prices between 2016 and 2020
 
 ```{r}
-
-raw_df1$Date<- gsub(pattern="\\.","-", raw_df1$Date)
-raw_df1$Date<-as.POSIXct(raw_df1$Date,format="%y-%m")
-
-glimpse(raw_df1)
-
+ggplot(plot_df, aes(x=Date, y=TotalSales, color=HouseLevel)) + geom_point() + theme(axis.text.x = element_text(angle = 90), legend.position = "none")+ ggtitle("Istanbul House Prices") 
 
 ```
 
 
-```{r}
-ggplot(plot_df, aes(x=lubridate::date(Date)) + geom_line(aes(y=FirstHandSales, color="FirstHandSales")) 
+### Conclusion
 
-```
+House prices of Istanbul between 2016 and 2020 shows that : Maximum total sales is 25000, in December 2016 and the minimum sales in July 2016. Also , we can say that compared to months there is no big differences in total sales.
+
+

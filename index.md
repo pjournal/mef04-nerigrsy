@@ -6,6 +6,6 @@
 Report: [html](rmarkdown.html)
 
 ### In-Class Exercise 
-[html](In-class-exercise.html)
+Report: [html](In-class-exercise.html)
 
 

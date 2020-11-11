@@ -1,0 +1,179 @@
+---
+title: "Assignment 2"
+author: "Neriman Gürsoy"
+date: "11/9/2020"
+output: 
+  html_document:
+    toc: true
+    toc_float: 
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 3
+---
+<style>
+
+body {
+  color: #708090;
+  font-family: Calibri;
+  background-color: #F8F8FF;
+}
+</style>
+
+
+## IMPLEMENTATION OF THE dployr and ggplot2 PACKAGES
+## ELECTRICITY MARKET PRICES REPORT
+
+This electricity report shows that implementation and visualization by using dplyr and ggplot2 packages for 01-30 September 2020 EXIST dataset. 
+
+## 1.About Energy Exchange Istanbul (EXIST)
+
+Energy Exchange Istanbul (EXIST) was officially established on March 12, 2015 upon the registration processes completed subject to the provisions of the Electricity Market Law of 14.03.2013 numbered 6446 and  Turkish Trade Law of 12 Mart 2015 numbered 6102.
+Main objective and principal business activity is to plan, establish, develop, and manage energy market in a transparent manner that fulfills the requirements of energy market. Energy market in Turkey changes hourly and the related data can be found in the official webpage of EXIST. You can [click](https://rapor.epias.com.tr/rapor/xhtml/ptfSmfListeleme.xhtml) and filter the date you wish to check hourly data.
+
+## 2. About the Dataset
+
+This dataset consists of six different values:
+
+  1. Date
+  2. Market clearing price (MCP)
+  3. System Marginal Price (SMP)
+  4. Positive Imbalance Price
+  5. Negative Imbalance Price
+  6. System Marginal Price Direction
+  
+Before we get into the details of the report, there are a few terms about the dataset that we should mention. These are **energy deficit** and **energy surplus**. If there is a system-wide need for extra electricity production (i.e. actual demand > predicted demand), then it is called an energy Deficit. If the situation is the opposite (i.e. actual demand < predicted demand), then it is called an Energy Surplus. System Marginal Price(SMP) is always higher than Market Clearing Price(MCP) if system has Energy Deficit, and lower if there is Energy Surplus. Market operator also penalizes the operations in BPM by 3%. This is called **Imbalance Price**. Negative (Deficit) Imbalance Price is calculated as max(MCP,SMP)1.03 and Positive Imbalance Price is calculated as min(MCP,SMP)0.97.
+
+## 3. Analysis of the Dataset
+
+After downloading the data between 1 September 2020 and 30 September 2020 from the official webpage of EXIST, the analyses can be started. First of all lubridate, tidyverse and ggplot packages which are used in the report should be loaded. Then we can upload the date which is csv file format.
+
+```{r setup, include= FALSE}
+knitr::opts_chunk$set(fig.align="center")
+
+```
+
+
+```{r , message=FALSE, warning=FALSE}
+
+library (readr)
+library (dplyr)
+library (tidyverse)
+library (lubridate)
+library (ggplot2)
+
+Existdata <- read.csv("ptf-smf.csv")
+
+```
+
+We can use the glimpse function to inspect our data. By using it,each column is represented in a row with its data type and first few entries. We have 720 rows and 6 variables.
+
+```{r}
+Existdata %>% glimpse()
+```
+
+### 3.1. Rename columns and rearrange the data frame
+
+The date column is not date type, to convert from char to datetime:
+
+```{r , message= FALSE}
+
+Existdata$Date <- gsub(pattern = "\\.","-",Existdata$Date)
+Existdata$Date <- as.POSIXct(Existdata$Date,format = "%d-%m-%y %H:%M")
+
+Existdata %>% glimpse()
+
+```
+
+Also I changed the data type of *SMP* and *Negative.Imbalance.Price..TL.MWh.* columns from char to numeric and name of the columns by using transmute() function in order to have a better comprehension.
+
+```{r, message= FALSE, warning= FALSE}
+raw_df <- Existdata %>% transmute(Date,
+                                  MCP = MCP, 
+                                  SMP = as.numeric(SMP), 
+                                  PositiveIP = Positive.Imbalance.Price..TL.MWh., 
+                                  NegativeIP = as.numeric (Negative.Imbalance.Price..TL.MWh.), 
+                                  SMPDirection = SMP.Direction )
+
+raw_df %>% glimpse()
+```
+
+### 3.2. Market clearing price (MCP)
+
+**3.2.1. Hourly MPC**
+
+Since the electricity energy market prices are planned on an hourly basis, it will be useful to find the hourly average, minimum, and maximum values in order to gain some insights about the data. 
+
+```{r}
+plot1 <- raw_df %>% group_by(Hour=lubridate::hour(Date)) %>% summarize(AvgMCP_Hour=mean(MCP), 
+                                                              MinMCP_Hour=min(MCP), 
+                                                              MaxMCP_Hour=max(MCP) ) %>% print(n=5)
+```
+
+```{r}
+ ggplot(plot1, aes(x=Hour)) +
+    geom_line(aes(y = MinMCP_Hour, color = "Minimum hourly MCP"))+
+    geom_line(aes(y = MaxMCP_Hour, color = "Maximum hourly MCP"))+
+    geom_line(aes(y = AvgMCP_Hour, color = "Average hourly MCP"))+
+    labs( title = "Average, Minimum and Maximum Hourly MCP Values",
+          subtitle= "Energy Exchange Turkey (EXIST), between September 01 and 30",
+          color = "MCP",
+          x = "Hours",
+          y = " MCP Values")+
+  theme_minimal()
+```
+**3.2.2. Daily  MPC**
+```{r}
+plot2 <- raw_df %>% group_by(Day=lubridate::day(Date)) %>% summarize(AvgMCP_day=mean(MCP), 
+                                                              MinMCP_day=min(MCP), 
+                                                              MaxMCP_day=max(MCP) ) %>% print(n=5)
+```
+
+```{r}
+
+ ggplot(plot2, aes(x=Day)) +
+    geom_line(aes(y = MinMCP_day, color = "Minimum hourly MCP"))+
+    geom_line(aes(y = MaxMCP_day, color = "Maximum hourly MCP"))+
+    geom_line(aes(y = AvgMCP_day, color = "Average hourly MCP"))+
+    labs( title = "Average, Minimum and Maximum Daily MCP Values",
+          subtitle= "Energy Exchange Turkey (EXIST), between September 01 and 30",
+          color = "MCP",
+          x = "Days",
+          y = " MCP Values")+
+  theme_minimal()
+```
+**3.2.3. Daily  MPC**
+
+weekly MPC prices for the minimum, maximum, and average values can be seen below. Week numbers correspond to the sequence in a year of 52 weeks.
+
+```{r}
+plot3 <- raw_df %>% group_by(Week=lubridate::week(Date)) %>% summarize(AvgMCP_week=mean(MCP), 
+                                                              MinMCP_week=min(MCP), 
+                                                              MaxMCP_week=max(MCP) ) %>% print(n=5)
+```
+
+```{r}
+ ggplot(plot3, aes(x=Week)) +
+    geom_line(aes(y = MinMCP_week, color = "Minimum hourly MCP"))+
+    geom_line(aes(y = MaxMCP_week, color = "Maximum hourly MCP"))+
+    geom_line(aes(y = AvgMCP_week, color = "Average hourly MCP"))+
+    labs( title = "Average, Minimum and Maximum Weekly MCP Values",
+          subtitle= "Energy Exchange Turkey (EXIST), between September 01 and 30",
+          color = "MCP",
+          x = "Weeks",
+          y = " MCP Values")+
+  theme_minimal()
+```
+
+
+
+
+
+```{r, message= FALSE, warning= FALSE}
+
+ggplot(raw_df, aes(x=MCP, y=SMP, color=Date)) + geom_point() + labs(x="MCP", y="SMP",  title="Daily MCP and SMP Prices in September 2020") + theme_get() + geom_abline(slope=1, intercept=0, color="red")
+
+```
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

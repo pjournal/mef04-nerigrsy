@@ -1,7 +1,7 @@
 ---
 title: "Assignment 2"
 author: "Neriman Gürsoy"
-date: "11/9/2020"
+date: "11/12/2020"
 output: 
   html_document:
     toc: true
@@ -73,7 +73,7 @@ Existdata %>% glimpse()
 
 ### 3.1. Rename columns and rearrange the data frame
 
-The date column is not date type, to convert from char to datetime:
+The *date* column is not date type, to convert from char to datetime.
 
 ```{r , message= FALSE}
 
@@ -84,18 +84,21 @@ Existdata %>% glimpse()
 
 ```
 
-Also I changed the data type of *SMP* and *Negative.Imbalance.Price..TL.MWh.* columns from char to numeric and name of the columns by using transmute() function in order to have a better comprehension.
+Renaming of the columns by using transmute() function in order to have a better comprehension.
+
 
 ```{r, message= FALSE, warning= FALSE}
+
 raw_df <- Existdata %>% transmute(Date,
                                   MCP = MCP, 
-                                  SMP = as.numeric(SMP), 
+                                  SMP = SMP, 
                                   PositiveIP = Positive.Imbalance.Price..TL.MWh., 
-                                  NegativeIP = as.numeric (Negative.Imbalance.Price..TL.MWh.), 
+                                  NegativeIP = Negative.Imbalance.Price..TL.MWh., 
                                   SMPDirection = SMP.Direction )
 
 raw_df %>% glimpse()
 ```
+
 
 ### 3.2. Market clearing price (MCP)
 
@@ -103,11 +106,12 @@ raw_df %>% glimpse()
 
 Since the electricity energy market prices are planned on an hourly basis, it will be useful to find the hourly average, minimum, and maximum values in order to gain some insights about the data. 
 
-```{r}
-plot1 <- raw_df %>% group_by(Hour=lubridate::hour(Date)) %>% summarize(AvgMCP_Hour=mean(MCP), 
-                                                              MinMCP_Hour=min(MCP), 
-                                                              MaxMCP_Hour=max(MCP) ) %>% print(n=5)
+```{r, message= FALSE}
+plot1 <- raw_df %>% group_by(Hour=lubridate::hour(Date)) %>% 
+  summarize(AvgMCP_Hour=mean(MCP), MinMCP_Hour=min(MCP), MaxMCP_Hour=max(MCP) ) %>% 
+  print(n=5)
 ```
+
 
 ```{r}
  ggplot(plot1, aes(x=Hour)) +
@@ -119,13 +123,15 @@ plot1 <- raw_df %>% group_by(Hour=lubridate::hour(Date)) %>% summarize(AvgMCP_Ho
           color = "MCP",
           x = "Hours",
           y = " MCP Values")+
-  theme_minimal()
+    theme_minimal()
 ```
+
 **3.2.2. Daily  MPC**
-```{r}
-plot2 <- raw_df %>% group_by(Day=lubridate::day(Date)) %>% summarize(AvgMCP_day=mean(MCP), 
-                                                              MinMCP_day=min(MCP), 
-                                                              MaxMCP_day=max(MCP) ) %>% print(n=5)
+
+```{r, message=FALSE}
+plot2 <- raw_df %>% group_by(Day=lubridate::day(Date)) %>% 
+  summarize(AvgMCP_day=mean(MCP), MinMCP_day=min(MCP), MaxMCP_day=max(MCP) ) %>% 
+  print(n=5)
 ```
 
 ```{r}
@@ -139,16 +145,17 @@ plot2 <- raw_df %>% group_by(Day=lubridate::day(Date)) %>% summarize(AvgMCP_day=
           color = "MCP",
           x = "Days",
           y = " MCP Values")+
-  theme_minimal()
+    theme_minimal()
 ```
-**3.2.3. Daily  MPC**
 
-weekly MPC prices for the minimum, maximum, and average values can be seen below. Week numbers correspond to the sequence in a year of 52 weeks.
+**3.2.3. Weekly  MPC**
 
-```{r}
-plot3 <- raw_df %>% group_by(Week=lubridate::week(Date)) %>% summarize(AvgMCP_week=mean(MCP), 
-                                                              MinMCP_week=min(MCP), 
-                                                              MaxMCP_week=max(MCP) ) %>% print(n=5)
+Weekly MPC prices for the minimum, maximum, and average values can be seen below. Week numbers correspond to the sequence in a year of 52 weeks.
+
+```{r, message= FALSE}
+plot3 <- raw_df %>% group_by(Week=lubridate::week(Date)) %>% 
+  summarize(AvgMCP_week=mean(MCP), MinMCP_week=min(MCP), MaxMCP_week=max(MCP) ) %>% 
+  print(n=5)
 ```
 
 ```{r}
@@ -161,19 +168,238 @@ plot3 <- raw_df %>% group_by(Week=lubridate::week(Date)) %>% summarize(AvgMCP_we
           color = "MCP",
           x = "Weeks",
           y = " MCP Values")+
-  theme_minimal()
+    theme_minimal()
+```
+
+### 3.3. System Marginal Price (SMP)
+
+**3.3.1. Daily change of the SMP**
+
+```{r, message= FALSE}
+plot4 <- raw_df %>% group_by(Day=lubridate::day(Date)) %>% 
+  summarize(AvgSMP_day=mean(SMP), MinSMP_day=min(SMP), MaxSMP_day=max(SMP)) %>%
+  ungroup()
+  plot4
+
+```
+
+```{r}
+    ggplot(plot4, aes(x=Day, color = "Days"))+
+    geom_line(aes(y = AvgSMP_day, color = "Average daily SMP")) +
+    geom_line(aes(y = MinSMP_day, color = "Minimum daily SMP")) +
+    geom_line(aes(y = MaxSMP_day, color = "Maximum daily SMP")) +
+    theme_minimal() +
+    labs(title = "Minimum, Maximum and Average Price of Daily SMP",
+         subtitle = "Energy Exchange Turkey (EXIST), between September 01 and 30",
+         x= "Days",
+         y= "Prices",
+         color = "Prices")
 ```
 
 
+### 3.4.Relationship between MCP and SMP 
+
+We can the following plot in order to obtain daily average of the MCP and SMP.
+
+```{r, message=FALSE}
+plot5 <- raw_df %>%
+        group_by(Day = lubridate::day(Date))%>%
+        summarise(Average_MCP = mean(MCP),
+                  Average_SMP = mean(SMP),
+                  Difference = abs(mean(MCP) - mean(SMP))) %>%
+        ungroup()%>%
+        arrange(desc(Difference))
+        
+knitr::kable(plot5, format="markdown")
+```
+
+**Graph of the daily average value of MCP and SMP with line graph:**
+
+```{r}
+  ggplot(plot5, aes(x = Day)) +
+    geom_line(aes(y = Average_MCP, color = "Daily Average MCP")) +
+    geom_line(aes(y = Average_SMP, color = "Daily Average SMP")) +
+    theme_minimal() +
+    labs(title = "Comparison of daily SMP and MCP",
+         x="Days",
+         y="Price",
+         color="Price Type")
+
+```
+```{r}
+  ggplot(plot5, aes(x=Day)) + 
+    geom_line(aes(y = Difference, color = "Difference of average values")) +
+    labs(x = "Day", y = "TL/MWh",
+       title = "Difference between Daily average MCP-SMP Change Graph",
+       subtitle = "Energy Exchange of Turkey - EXIST, between September 01 and September 31 ")+
+  theme_minimal() +
+  theme(legend.position = "center")
+```
+
+The graph shows that the highest difference between daily average value of SMP and MPC is observed in the third day.
 
 
+**Graph of the weekly average value of MCP and SCP with bar graph:**
+
+```{r, message= FALSE}
+  plot6 <-raw_df %>%
+  group_by(Week = lubridate::week(Date)) %>%
+  summarise(Weekly_MCP = mean(MCP),
+            Weekly_SMP = mean(SMP),
+            Difference = abs(mean(MCP) - mean(SMP))) %>%
+  ungroup() %>%
+  arrange(desc(Difference))
+plot6
+ 
+```
+
+```{r}
+ ggplot(plot6,aes(x = Week, y = Difference, fill = "Weeks")) +
+    geom_bar(stat = "identity") +
+    theme_minimal()+
+    theme(legend.position = "none") +
+    labs(title = "Difference Between Weekly MCP and SMP ",
+         x = "Week",
+         y = "Average Price Difference")
+```
+
+**Scatter Graph of the relationship between MCP and SMP values:**
+
+The plot below shows that for most of the days, MCP lies 200-400 and SMP lies 100-500. Also we can say that there is an outlier value which SMP is equal 2000.
 
 ```{r, message= FALSE, warning= FALSE}
 
-ggplot(raw_df, aes(x=MCP, y=SMP, color=Date)) + geom_point() + labs(x="MCP", y="SMP",  title="Daily MCP and SMP Prices in September 2020") + theme_get() + geom_abline(slope=1, intercept=0, color="red")
+  ggplot(raw_df, aes(x=MCP, y=SMP, color=Date)) + 
+  geom_point() + 
+  labs(x="MCP", y="SMP",  title="MCP and SMP Prices in September 2020") + 
+  theme_get() + 
+  geom_abline(slope=1, intercept=0, color="red")
 
 ```
 
 
+### 3.5. Negative and positive imbalance
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+3.5.1. Negative and positive imbalance price in first day
+
+Negative and Positive imbalance prices can be seen below for the first day of the September, 2020.
+
+```{r}
+raw_df %>%
+  select(Date, PositiveIP, NegativeIP)%>%
+  group_by(Day = lubridate::day(Date), Hour = lubridate::hour(Date))%>%
+  select(Day,Hour, PositiveIP, NegativeIP)%>%
+  filter(Day==1)%>%
+  
+  ggplot(aes(Hour, color = "Hours"))+
+    geom_line(aes(y=PositiveIP, color = "Positive imbalance price")) +
+    geom_line(aes(y=NegativeIP, color = "Negative imbalance price")) +
+    labs(x = "Hours", y = "TL/MWh",
+         title= "Pozitive and Negative Imbalance Price of First Day",
+         color = "Imbalance Price") +
+    theme_minimal()
+
+```
+
+3.5.2. Negative and positive imbalance price in first day
+
+Negative and Positive imbalance prices can be seen below for the last day of the September, 2020.
+
+```{r}
+raw_df %>%
+  select(Date, PositiveIP, NegativeIP)%>%
+  group_by(Day = lubridate::day(Date), Hour = lubridate::hour(Date))%>%
+  select(Day,Hour, PositiveIP, NegativeIP)%>%
+  filter(Day==30)%>%
+  
+  ggplot(aes(Hour, color = "Hours"))+
+    geom_line(aes(y=PositiveIP, color = "Positive imbalance price")) +
+    geom_line(aes(y=NegativeIP, color = "Negative imbalance price")) +
+    labs(x = "Hours", y = "TL/MWh",
+         title= "Pozitive and Negative Imbalance Price of Last Day",
+         color = "Imbalance Price") +
+    theme_minimal()
+```
+
+3.5.3. Graph of daily difference of negative and positive imbalance price
+
+```{r}
+
+  plot7<-raw_df %>%
+        select(Date, PositiveIP, NegativeIP)%>%
+        group_by(Day = lubridate::day(Date), Hour = lubridate::hour(Date))%>%
+        select(Day,Hour, PositiveIP, NegativeIP)%>%
+        transmute(Day,Hour,PositiveIP, NegativeIP, difference=NegativeIP-PositiveIP)%>%
+        ungroup()%>%
+        arrange(desc(difference)) %>%
+        print(n=5)
+
+```
+
+### 3.6. SMP Direction
+
+These are **energy deficit**, **energy surplus**, and **energy balance** due to the relationship between actual demand and predicted demand. In the data we examine, there are energy deficit, surplus and balance states on an hourly basis. This information is given in the column called SMP Direction.
+
+```{r, message= FALSE}
+plot8 <- raw_df %>% group_by(SMPDirection) %>% summarize(count=n())%>%print()
+```
+```{r}
+ggplot(plot8, aes(x="", y=count, fill=SMPDirection)) + geom_bar(stat="identity", width=1) + 
+  coord_polar("y") + 
+  theme_minimal() +
+  labs( title="Energy Imbalance in September 2020",
+        fill="SMP Direction")
+```
+
+3.6.1. Hourly Energy Deficit, Energy Surplus,and Balance Distribution
+
+```{r, message = FALSE}
+plot9 <- raw_df %>% group_by(Hour=lubridate::hour(Date)) %>%
+         summarise(Surplus=sum(MCP>SMP), Deficit=sum(MCP<SMP), Balance=sum(MCP==SMP)) %>% 
+         ungroup() %>%
+         select(Hour, Surplus, Deficit, Balance) %>% 
+         print(n=5)
+
+```
+
+```{r}
+  ggplot(plot9, aes(x = Hour, color = "Hours")) +
+    geom_line(aes(y = Surplus, color = "Number of surplus")) +
+    geom_line(aes(y = Deficit, color = "Number of deficit")) +
+    geom_line(aes(y = Balance, color = "Number of balance")) +
+    
+  labs(x = "Hour",
+       y = "Numbers",
+       title = "Hourly Energy Imbalance",
+       color = "SMP Direction Type") +
+  theme_minimal()
+```
+
+This graph shows that, especially between 8 and 23 pm, the number of deficit is greater than both number of surplus and balance. The deficit means that, the energy demand is more than the predicted energy. That is the more energy used than the predicted.According to the daily analysis, in each hour, we have more deficit value than surplus and balance. That is, we use more energy than predict.
+
+
+3.6.2. Graph of the Hourly Deficit Energy Usage 
+
+```{r, message= FALSE}
+plot10 <- raw_df %>%
+        group_by(Hours = lubridate::hour(Date))%>%
+        transmute(EnergyUsage = ifelse(SMPDirection == "?Energy Surplus", "Surplus", "Deficit")) %>%
+        group_by(EnergyUsage, Hours) %>%
+        filter(EnergyUsage=="Deficit") %>%
+        summarise(Number = n())%>% 
+        print(n=5)
+  
+
+```
+
+```{r}
+  ggplot(plot10, aes(x = Hours, y = Number, fill = Number)) +
+         geom_bar(stat = "identity") +
+         theme_minimal() +
+         labs(title = "Hourly Deficit Energy Usage ",
+         fill = "Number of Energy Usage",
+         x="Hours",
+         y = "Count")
+```
+
+This bar chart shows the hourly number of deficit energy usage. This result shows that the more deficit energy usage observed in the 6 pm.In

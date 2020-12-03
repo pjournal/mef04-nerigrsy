@@ -1,0 +1,65 @@
+---
+title: "In - Class Exercise with Tennis Data"
+author: "MadagaskaR"
+date: "12/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library (readr)
+library (dplyr)
+library (tidyverse)
+library (lubridate)
+library (ggplot2)
+library (kableExtra)
+
+```
+
+```{r}
+raw_df <- load(url("https://github.com/pjournal/mef04-nerigrsy/blob/gh-pages/atp_tennis_data_2017.RData?raw=true"))
+
+glimpse(raw_df)
+head(raw_df)
+```
+```{r}
+
+tourney_df %>% print(n=10)
+player_df %>% print(n=5)
+score_df %>% print(n=10)
+rank_df %>% print(n=5)
+stats_df %>% print(n=5)
+
+```
+## Top 20 players with the number matches (top winners by quantity)
+
+```{r}
+top_20 <- score_df %>% 
+  count(winner_player_id, sort = TRUE) %>%
+  slice(1:20) %>%
+  inner_join(player_df, by=c("winner_player_id" = "player_id")) %>%
+  select(first_name, last_name, n) %>%
+  rename(., number_of_win = n)
+
+kable(top_20, col.names = c("First Name", "Last Name", "Number of Win"))
+
+```
+
+## Players which won tourneys more than one and their number of championship
+
+```{r}
+  left_join(player_df, tourney_df, by=c("player_id" = "singles_winner_player_id")) %>% 
+  drop_na() %>%
+  transmute(player_id,flag_code,tourney_name,first_name,last_name,winner_count = 1) %>%
+  group_by(player_id) %>% 
+  transmute(winner_count = sum(winner_count),flag_code,first_name,last_name) %>% 
+  arrange(desc(winner_count)) %>%
+  distinct() %>%
+  ungroup() %>% 
+  select(first_name,last_name,winner_count) %>%
+  #head(10)
+kable()
+```
+
+

@@ -1143,27 +1143,6 @@ Wawrinka
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>  left_join(player_df, score_df, by=c(&quot;player_id&quot; =&quot;winner_player_id&quot;))%&gt;%
-  drop_na() %&gt;%
-  #select(player_id, first_name, last_name, flag_code, residence) %&gt;%
-  group_by(flag_code) %&gt;%
-  count(player_id, sort=TRUE) %&gt;%
-  print</code></pre>
-<pre><code>## # A tibble: 208 x 3
-## # Groups:   flag_code [53]
-##    flag_code player_id     n
-##    &lt;chr&gt;     &lt;chr&gt;     &lt;int&gt;
-##  1 SUI       f324         38
-##  2 ESP       n409         34
-##  3 BEL       gb88         27
-##  4 BUL       d875         27
-##  5 ESP       cd85         24
-##  6 AUT       tb69         22
-##  7 GER       z355         22
-##  8 CRO       c977         21
-##  9 CZE       ba47         20
-## 10 ESP       bd06         20
-## # ... with 198 more rows</code></pre>
 </div>
 
 

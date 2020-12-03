@@ -21,7 +21,6 @@ library (kableExtra)
 raw_df <- load(url("https://github.com/pjournal/mef04-nerigrsy/blob/gh-pages/atp_tennis_data_2017.RData?raw=true"))
 
 glimpse(raw_df)
-head(raw_df)
 ```
 ```{r}
 

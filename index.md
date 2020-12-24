@@ -1,6 +1,6 @@
 ## Welcome to My Personal Progress Journal
 
-# Assignments
+## Assignments
 
 ### Assignment 1:
 A report consists of description of myself and some R related videos and posts by using Rmarkdown.

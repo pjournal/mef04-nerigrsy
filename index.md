@@ -18,6 +18,6 @@ Report: [html](Assignment2_Electricity-Market-Prices.html)
 ### Assignment 3: 
 A report consists of data manipulation and data visualization by using dplyr and ggplot2 packages for Diamonds dataset. 
 In addition, Principal Component Analysis, and K-Means algorithm are practiced, at the end Generalized Linear model and CART model
-are studied in order to estime price of a diamond.
+are studied in order to estimate the price of a diamonds.
 
 Report: [html](Assignment3_Diamonds-Data.html)

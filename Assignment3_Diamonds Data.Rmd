@@ -789,6 +789,7 @@ Before we start to to prepare prediction model, we can control the correlation b
 diamonds_cor<-cor(diamonds_train[-c(11:15)])
 corrplot(diamonds_cor, method="number")
 ```
+
 ## 5.1 Generalized Linear Model
 
 There are four assumptions to be fulfilled in a linear model:
@@ -841,6 +842,7 @@ pred_vs_real_glm %>%
        x = "Predictions",
        y = "Real Values")
 ```
+
 ## 5.2 Classification and Regression Tree
 
 Another supervised model is Classification and Regression Tree models, i.e., **CART.** It is a predicted model and it is a model that explains how an outcome variable’s values can be predicted based on other values. To create CART model, we use rpart() function which belongs to base R. To create a CARt model, again we use diamonds_train dataset. After the creating of the model, there are several visualization methods like prp(), fancyRpartPlot, and so on. In this example, fancyRpartPlot plot is used.

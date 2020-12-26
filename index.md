@@ -21,3 +21,6 @@ In addition, Principal Component Analysis, and K-Means algorithm are practiced, 
 are studied in order to estimate the price of a diamonds.
 
 Report: [html](Assignment3_Diamonds-Data.html)
+
+
+### Group Project

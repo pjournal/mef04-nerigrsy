@@ -7,9 +7,6 @@ A report consists of description of myself and some R related videos and posts b
 
 Report: [html](rmarkdown.html)
 
-### In-Class Exercise 
-Report: [html](In-class-exercise.html)
-
 ### Assignment 2:
 A report consists of data manipulation and visualization by using dpylr and ggplot2 packages for EXIST September 2020 dataset.
 
@@ -50,10 +47,12 @@ In this assignment, the main purpose is to make an exploratory data analysis by 
 
 ### **Exercises**
 
-### Week 4
-- [Shiny App - Movie Example](In-class-exercise.html)
+### Week 3 
 
-### Week 
+- [Istanbul’s property market](In-class-exercise.html)
+
+### Week 5
+
 - [Join_ATP World Tour](In-Class-ATP_data.html)
 
 

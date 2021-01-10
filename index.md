@@ -47,3 +47,13 @@ In this assignment, the main purpose is to make an exploratory data analysis by 
 - Presentation: [html](https://pjournal.github.io/mef04g-madagaskar/Group_Project/presentation_28.12.html#1)
 - Teaser: [YouTube](https://youtu.be/lThPepmVR5s)
 
+
+### **Exercises**
+
+### Week 4
+- [Shiny App - Movie Example](In-class-exercise.html)
+
+### Week 
+- [Join_ATP World Tour](In-Class-ATP_data.html)
+
+

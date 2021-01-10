@@ -17,7 +17,7 @@ A report consists of data manipulation and data visualization by using dplyr and
 In addition, Principal Component Analysis, and K-Means algorithm are practiced, at the end Generalized Linear model and CART model
 are studied in order to estimate the price of a diamonds.
 
-Report: [html](Assignment3_Diamonds-Data.html)
+Report: [html](Assignment3_DiamondsData.html)
 
 
 ### **Group Assignments and Projects**

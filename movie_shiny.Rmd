@@ -115,9 +115,10 @@ server <- function(input, output) {
 
 ## Combination of the UI and Server
 
-```{r}
+```{r, eval=FALSE}
 # Run the application 
 shinyApp(ui = ui, server = server)
 
 ```
+
 

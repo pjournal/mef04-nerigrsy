@@ -53,7 +53,7 @@ In this assignment, the main purpose is to make an exploratory data analysis by 
 
 ### Week 4
 
-- [Shiny Example_Movies Data](movie_shiny.html)
+- [Shiny Movies Data](movie_shiny.html)
 
 ### Week 5
 

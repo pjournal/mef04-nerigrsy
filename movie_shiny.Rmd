@@ -1,0 +1,123 @@
+---
+title: "Shiny Example with Movies Data"
+author: "Neriman Gürsoy"
+date: "11/18/2020"
+output: html_document
+---
+
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", warning=FALSE, message=FALSE, error=FALSE)
+
+```
+
+
+
+## Packages and Preparaion of Data Set
+
+```{r }
+
+pti <- c("shiny","tidyverse","ggplot2movies")
+pti <- pti[!(pti %in% installed.packages())]
+if(length(pti)>0){
+    install.packages(pti)
+}
+
+
+library(shiny)
+library(tidyverse)
+library(ggplot2movies)
+
+
+set.seed(61)
+shiny_movie_set <- 
+    movies %>% 
+    filter(year >= 2000) %>%
+    select(title,year,length,rating,votes,Action:Short) %>% 
+    gather(genre,value,Action:Short) %>% 
+    filter(value == 1) %>% 
+    select(-value)
+
+# Get genre list
+genres <- 
+    shiny_movie_set %>% 
+    distinct(genre) %>% 
+    unlist(.)
+
+names(genres) <- NULL
+```
+
+## Preparing User Interface (UI)
+
+```{r}
+ui <- fluidPage(
+
+
+    titlePanel("Movies and IMDB Rankings"),
+
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput("years",
+                        "Years",
+                        min = 2000,
+                        max = 2005,
+                        value = c(2002,2003), 
+                        sep = ""), 
+            selectInput(
+                inputId = "genres",
+                label = "Genre",
+                choices = c("All",genres),
+                selected = "Drama" , 
+                multiple = TRUE      
+            ),
+            sliderInput(
+                "minvotes",
+                "At Least X Votes",
+                min = min(shiny_movie_set$votes),
+                max = max(shiny_movie_set$votes),
+                value = median(shiny_movie_set$votes),
+                sep = ""
+            )
+        ),
+
+        mainPanel(
+           plotOutput("MoviePlot")
+        )
+    )
+)
+```
+
+## Preparing Server
+
+```{r}
+server <- function(input, output) {
+
+    output$MoviePlot <- renderPlot({
+        
+        #we try to 
+        plot_df <- shiny_movie_set %>%
+            filter(year >= input$years[1] & year <= input$years[2]) %>%
+            filter(votes >= input$minvotes)%>%
+            filter(genre %in% input$genres | "All" %in% input$genres)
+        
+        #if(!("All" %in% genres)) {
+            #plot_df <- plot_df %>% filter(genre %in% input$genres)} # in this part we do not add "All" movies into the graph for this reason we use "|" as given in the previous line.
+        
+        ggplot(plot_df, 
+               aes(x = length, 
+                   y = rating,
+                   color = genre)) + geom_point() # provide scatter plot for the data
+    })
+}
+```
+
+## Combination of the UI and Server
+
+```{r}
+# Run the application 
+shinyApp(ui = ui, server = server)
+
+```
+

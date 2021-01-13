@@ -51,6 +51,10 @@ In this assignment, the main purpose is to make an exploratory data analysis by 
 
 - [Istanbul’s property market](In-class-exercise.html)
 
+### Week 4
+
+-[Shiny Example_Movies Data](movie_shiny.html)
+
 ### Week 5
 
 - [Join_ATP World Tour](In-Class-ATP_data.html)

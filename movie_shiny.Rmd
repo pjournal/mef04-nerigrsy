@@ -111,12 +111,13 @@ server <- function(input, output) {
                    color = genre)) + geom_point() # provide scatter plot for the data
     })
 }
+
 ```
 
 
 ## Combination of the UI and Server
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, message=FALSE}
 # Run the application 
 shinyApp(ui = ui, server = server)
 
